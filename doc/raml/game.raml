@@ -1,0 +1,67 @@
+#%RAML 0.8
+---
+title: authentication API
+baseUri: http://techserv.ece.mcmaster.ca/~harwood/project/
+version: v1
+
+/game:
+ description: Game directory.
+ options:
+  description: Returns information about the auth API
+  responses:
+   200:
+    description: Information about the auth API is returned
+ get:
+  description: Retrieve a list of games in the directory.
+  queryParameters:
+   genre:
+    displayName: Genre
+    type: string
+    description: The type of game.
+    example: checkers
+    required: false
+  responses:
+   200:
+    description: Return the list of games in the directory
+ post:
+  description: Register a new game in the directory.
+  queryParameters:
+   genre:
+    displayName: Genre
+    type: string
+    description: The type of game.
+    example: checkers
+    required: false
+  responses:
+   201:
+    description: A listing for the game has been created
+   400:
+    description: Either the game status or genre supplied is incorrect
+   403:
+    description: Registering of games is not permitted with the current credentials
+ /{gameName}:
+  get:
+   description: Retrieve the information of a specific game
+   responses:
+    200:
+     description: Details for the specified game are returned
+    404:
+     description: The gameName provided does not correspond to an existing game
+  put:
+   description: Update the information of a specific game
+   responses:
+    204:
+     description: The game information has been updated
+    403:
+     description: Updating the specified game is not permitted with the current credentials
+    404:
+     description: The gameName provided does not correspond to an existing game
+  delete:
+   description: Remove the specified game from the directory
+   responses:
+    204:
+     description: The specified game has been removed from the directory listing
+    403:
+     description: Removing the specified game is not permitted with the current credentials
+    404:
+     description: The gameName provided does not correspond to an existing game

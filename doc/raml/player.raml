@@ -1,0 +1,65 @@
+#%RAML 0.8
+---
+title: player API
+baseUri: http://techserv.ece.mcmaster.ca/~harwood/project/
+version: v1
+
+/player:
+ description: player API
+ options:
+  description: Returns information about the auth API
+  responses:
+   200:
+    description: Information about the auth API is returned
+ get:
+  description: Get a list of players
+  responses:
+   200:
+    description: Returns player information
+ post:
+  description: Create a player profile
+  responses:
+   204:
+    description: Player profile created
+   400:
+    description: Invalid parameters provided
+   403:
+    description: Not logged in
+   409:
+    description: Profile already exists
+ /{userId}:
+  uriParameters:
+   userId:
+    type: string
+    description: Account userId for player
+  put:
+   description: Modify a player profile
+   queryParameters:
+    token:
+     type: string
+     description: Authentication token for userId
+   responses:
+    204:
+     description: Profile updated
+    400:
+     description: Authentication token invalid
+    403:
+     description: Request not by owner or admin
+    404:
+     description: userId not found
+  get:
+   description: Get the profile of a specific player
+   responses:
+    200:
+     description: Returns player information
+    404:
+     description: userId not found
+  /games:
+   get:
+    description: Get a list of games a player is participating in
+    responses:
+     200:
+      description: Returns game information
+     404:
+      description: userId not found
+   

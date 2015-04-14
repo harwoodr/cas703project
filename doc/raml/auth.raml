@@ -1,0 +1,95 @@
+#%RAML 0.8
+---
+title: authentication API
+baseUri: http://techserv.ece.mcmaster.ca/~harwood/project/
+version: v1
+
+/auth:
+ description: Authentication API
+ options:
+  description: Returns information about the auth API
+  responses:
+   200:
+    description: Information about the auth API is returned
+ post:
+  description: Register a new account
+  queryParameters:
+   userName:
+    required: true
+    type: string
+   email:
+    required: true
+    type: string
+   password:
+    required: true
+    type: string
+  responses:
+   204:
+    description: Account successfully registered
+   400:
+    description: At least one required parameter is missing or has a problem - which will be described in the response
+   409:
+    description: The username is already registered
+ /{userName}:
+  uriParameters:
+   userName:
+    type: string
+  description: A specific account username
+  post:
+   description: Authenticate an account - in reality this would either be encrypted or hashed
+   queryParameters:
+    password:
+     required: true
+     type: string
+   responses:
+    200:
+     description: Authentication successful - token provided in body and as cookie
+    404:
+     description: The userName cannot be found
+    400:
+     description: The authentication attempt failed - a reason will be provided in the response
+  get:
+   description: Request reset of a forgotten password - sends temporary password to email address
+   responses:
+    204:
+     description: Temporary password will be emailed to the user
+    404:
+     description: The userName cannot be found
+  put:
+   description: Change password
+   queryParameters:
+    password:
+     required: true
+     type: string
+    newPassword:
+     required: true
+     type: string
+    repeatNewPassword:
+     required: true
+     type: string
+   responses:
+    204:
+     description: Password has been changed
+    400:
+     description: Password change attempt failed - a reason will be provided in the response
+    404:
+     description: The userName cannot be found
+  /{token}:
+   uriParameters:
+    token:
+     type: string
+   description: Token associated with a successful authentication
+   get:
+    description: Verifies if token is currently associated with the userName
+    responses:
+     204:
+      description: Token is currently associated with the userName
+     404:
+      description: Either the token or the userName cannot be found.
+   delete:
+    description: Disassociates token with userName
+    responses:
+     204:
+      description: Token is no longer associated with userName
+     404:
+      description: Either the token or the userName cannot be found

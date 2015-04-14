@@ -1,0 +1,89 @@
+#%RAML 0.8
+---
+title: tic tac toe API
+baseUri: http://techserv.ece.mcmaster.ca/~harwood/project/
+version: v1
+
+/tictactoe:
+ description: tictactoe API
+ options:
+  description: Returns information about the auth API
+  responses:
+   200:
+    description: Information about the auth API is returned
+ post:
+  description: Offer a new game
+  responses:
+   201:
+    description: Game instance created
+   400:
+    description: Registering of games is not permitted with the current credentials
+   403:
+    description: Authentication token invalid
+ get:
+  description: Get a list of game instances
+  queryParameters:
+   state:
+    description: List only games of a specific state (open/playing/done)
+    type: string
+    required: false
+    example: open
+   playerName:
+    description: List only games involving a specific player
+    required: false
+  responses:
+   200:
+    description: Returns a list of game instances
+   400:
+    description: The game state or playerId supplied is incorrect
+ /{instanceId}:
+  get: 
+   description: Get details of a specific game
+   responses:
+    200:
+     description: Returns game instance information
+    404:
+     description: instanceId not found
+  delete:
+   description: Concede a game or withdraw a game offer
+   responses:
+    204:
+     description: Game instance conceded or withdrawn
+    400:
+     description: Authentication token invalid
+    403:
+     description: Request not by involved player or admin
+    404:
+     description: instanceId not found
+  put:
+   description: Join a game
+   responses:
+    204:
+     description: Game instance joined
+    403:
+     description: Game instance is not accepting players
+    400:
+     description: Authentication token invalid
+    404:
+     description: instanceId not found
+  /{cellId}:
+   get:
+    description: Get contents of a specific place on the board
+    responses:
+     200:
+      description: Information for place on board
+     404:
+      description: instanceId or cellId not found
+   put:
+    description: Make a mark
+    responses:
+     204:
+      description: Mark made
+     400:
+      description: Authentication token invalid
+     403:
+      description: Request not by involved player or admin
+     404:
+      description: instanceId not found
+     409:
+      description: Illegal move

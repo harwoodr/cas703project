@@ -1,0 +1,388 @@
+#%RAML 0.8
+---
+title: Entire System API
+baseUri: http://techserv.ece.mcmaster.ca/~harwood/project/
+version: v1
+
+/auth:
+ description: Authentication API
+ options:
+  description: Returns information about the auth API
+  responses:
+   200:
+    description: Information about the auth API is returned
+ post:
+  description: Register a new account
+  queryParameters:
+   userName:
+    required: true
+    type: string
+   email:
+    required: true
+    type: string
+   password:
+    required: true
+    type: string
+  responses:
+   204:
+    description: Account successfully registered
+   400:
+    description: At least one required parameter is missing or has a problem - which will be described in the response
+   409:
+    description: The username is already registered
+ /{userName}:
+  uriParameters:
+   userName:
+    type: string
+  description: A specific account username
+  post:
+   description: Authenticate an account - in reality this would either be encrypted or hashed
+   queryParameters:
+    password:
+     required: true
+     type: string
+   responses:
+    200:
+     description: Authentication successful - token provided in body and as cookie
+    404:
+     description: The userName cannot be found
+    400:
+     description: The authentication attempt failed - a reason will be provided in the response
+  get:
+   description: Request reset of a forgotten password - sends temporary password to email address
+   responses:
+    204:
+     description: Temporary password will be emailed to the user
+    404:
+     description: The userName cannot be found
+  put:
+   description: Change password
+   queryParameters:
+    password:
+     required: true
+     type: string
+    newPassword:
+     required: true
+     type: string
+    repeatNewPassword:
+     required: true
+     type: string
+   responses:
+    204:
+     description: Password has been changed
+    400:
+     description: Password change attempt failed - a reason will be provided in the response
+    404:
+     description: The userName cannot be found
+  /{token}:
+   uriParameters:
+    token:
+     type: string
+   description: Token associated with a successful authentication
+   get:
+    description: Verifies if token is currently associated with the userName
+    responses:
+     204:
+      description: Token is currently associated with the userName
+     404:
+      description: Either the token or the userName cannot be found.
+   delete:
+    description: Disassociates token with userName
+    responses:
+     204:
+      description: Token is no longer associated with userName
+     404:
+      description: Either the token or the userName cannot be found
+
+/game:
+ description: Game directory.
+ options:
+  description: Returns information about the auth API
+  responses:
+   200:
+    description: Information about the auth API is returned
+ get:
+  description: Retrieve a list of games in the directory.
+  queryParameters:
+   genre:
+    displayName: Genre
+    type: string
+    description: The type of game.
+    example: checkers
+    required: false
+  responses:
+   200:
+    description: Return the list of games in the directory
+ post:
+  description: Register a new game in the directory.
+  queryParameters:
+   genre:
+    displayName: Genre
+    type: string
+    description: The type of game.
+    example: checkers
+    required: false
+  responses:
+   201:
+    description: A listing for the game has been created
+   400:
+    description: Either the game status or genre supplied is incorrect
+   403:
+    description: Registering of games is not permitted with the current credentials
+ /{gameName}:
+  get:
+   description: Retrieve the information of a specific game
+   responses:
+    200:
+     description: Details for the specified game are returned
+    404:
+     description: The gameName provided does not correspond to an existing game
+  put:
+   description: Update the information of a specific game
+   responses:
+    204:
+     description: The game information has been updated
+    403:
+     description: Updating the specified game is not permitted with the current credentials
+    404:
+     description: The gameName provided does not correspond to an existing game
+  delete:
+   description: Remove the specified game from the directory
+   responses:
+    204:
+     description: The specified game has been removed from the directory listing
+    403:
+     description: Removing the specified game is not permitted with the current credentials
+    404:
+     description: The gameName provided does not correspond to an existing game
+
+/player:
+ description: player API
+ options:
+  description: Returns information about the auth API
+  responses:
+   200:
+    description: Information about the auth API is returned
+ get:
+  description: Get a list of players
+  responses:
+   200:
+    description: Returns player information
+ post:
+  description: Create a player profile
+  responses:
+   204:
+    description: Player profile created
+   400:
+    description: Invalid parameters provided
+   403:
+    description: Not logged in
+   409:
+    description: Profile already exists
+ /{userId}:
+  uriParameters:
+   userId:
+    type: string
+    description: Account userId for player
+  put:
+   description: Modify a player profile
+   queryParameters:
+    token:
+     type: string
+     description: Authentication token for userId
+   responses:
+    204:
+     description: Profile updated
+    400:
+     description: Authentication token invalid
+    403:
+     description: Request not by owner or admin
+    404:
+     description: userId not found
+  get:
+   description: Get the profile of a specific player
+   responses:
+    200:
+     description: Returns player information
+    404:
+     description: userId not found
+  /games:
+   get:
+    description: Get a list of games a player is participating in
+    responses:
+     200:
+      description: Returns game information
+     404:
+      description: userId not found
+
+/service:
+ description: Service directory
+ options:
+  description: Returns information about the auth API
+  responses:
+   200:
+    description: Information about the auth API is returned
+ get:
+  description: Retrieve a list of services in the directory
+  queryParameters:
+   status:
+    type: string
+    description: The status of the service
+    example: active
+    required: false
+   serviceType:
+    type: string
+    description: The type of service
+    example: authentication
+    required: false
+  responses:
+   200:
+    description: The list of services is returned
+   400:
+    description: Either the service status or service type supplied is incorrect
+ post:
+  description: Register a new service in the directory
+  queryParameters:
+   status:
+    type: string
+    description: The status of the service
+    example: active
+    required: true
+   serviceType:
+    type: string
+    description: The type of service
+    example: authentication
+    required: true
+   serviceName:
+    type: string
+    description: The name of the service
+    example: auth
+    required: true
+   url:
+    type: string
+    description: The base url of the service
+    example: http://example.com/API/
+    required: true
+   serviceDescription:
+    type: string
+    description: A description of the service
+    example: This service provides authentication of users for other APIs
+    required: false
+  responses:
+   201:
+    description: A listing for the service has been created
+   400:
+    description: Either the service status or service type supplied is incorrect
+   403:
+    description: Registering of services is not permitted with the current credentials
+ /{serviceName}:
+  get:
+   description: Retrieve the information of a specific service
+   responses:
+    200:
+     description: Details for the specified service are returned
+    404:
+     description: The service id provided does not correspond to an existing service
+  put:
+   description: Update the information of a specific service
+   responses:
+    204:
+     description: The service information has been updated
+    403:
+     description: Updating the specified service is not permitted with the current credentials
+    404:
+     description: The service id provided does not correspond to an existing service
+  delete:
+   description: Remove the specified service from the directory
+   responses:
+    204:
+     description: The specified service has been removed from the directory listing
+    403:
+     description: Removing the specified service is not permitted with the current credentials
+    404:
+     description: The service id provided does not correspond to an existing service
+
+
+/tictactoe:
+ description: tictactoe API
+ options:
+  description: Returns information about the auth API
+  responses:
+   200:
+    description: Information about the auth API is returned
+ post:
+  description: Offer a new game
+  responses:
+   201:
+    description: Game instance created
+   400:
+    description: Registering of games is not permitted with the current credentials
+   403:
+    description: Authentication token invalid
+ get:
+  description: Get a list of game instances
+  queryParameters:
+   state:
+    description: List only games of a specific state (open/playing/done)
+    type: string
+    required: false
+    example: open
+   playerName:
+    description: List only games involving a specific player
+    required: false
+  responses:
+   200:
+    description: Returns a list of game instances
+   400:
+    description: The game state or playerId supplied is incorrect
+ /{instanceId}:
+  get: 
+   description: Get details of a specific game
+   responses:
+    200:
+     description: Returns game instance information
+    404:
+     description: instanceId not found
+  delete:
+   description: Concede a game or withdraw a game offer
+   responses:
+    204:
+     description: Game instance conceded or withdrawn
+    400:
+     description: Authentication token invalid
+    403:
+     description: Request not by involved player or admin
+    404:
+     description: instanceId not found
+  put:
+   description: Join a game
+   responses:
+    204:
+     description: Game instance joined
+    403:
+     description: Game instance is not accepting players
+    400:
+     description: Authentication token invalid
+    404:
+     description: instanceId not found
+  /{cellId}:
+   get:
+    description: Get contents of a specific place on the board
+    responses:
+     200:
+      description: Information for place on board
+     404:
+      description: instanceId or cellId not found
+   put:
+    description: Make a mark
+    responses:
+     204:
+      description: Mark made
+     400:
+      description: Authentication token invalid
+     403:
+      description: Request not by involved player or admin
+     404:
+      description: instanceId not found
+     409:
+      description: Illegal move

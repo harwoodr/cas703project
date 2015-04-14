@@ -1,0 +1,92 @@
+#%RAML 0.8
+---
+title: service directory API
+baseUri: http://techserv.ece.mcmaster.ca/~harwood/project/
+version: v1
+
+/service:
+ description: Service directory
+ options:
+  description: Returns information about the auth API
+  responses:
+   200:
+    description: Information about the auth API is returned
+ get:
+  description: Retrieve a list of services in the directory
+  queryParameters:
+   status:
+    type: string
+    description: The status of the service
+    example: active
+    required: false
+   serviceType:
+    type: string
+    description: The type of service
+    example: authentication
+    required: false
+  responses:
+   200:
+    description: The list of services is returned
+   400:
+    description: Either the service status or service type supplied is incorrect
+ post:
+  description: Register a new service in the directory
+  queryParameters:
+   status:
+    type: string
+    description: The status of the service
+    example: active
+    required: true
+   serviceType:
+    type: string
+    description: The type of service
+    example: authentication
+    required: true
+   serviceName:
+    type: string
+    description: The name of the service
+    example: auth
+    required: true
+   url:
+    type: string
+    description: The base url of the service
+    example: http://example.com/API/
+    required: true
+   serviceDescription:
+    type: string
+    description: A description of the service
+    example: This service provides authentication of users for other APIs
+    required: false
+  responses:
+   201:
+    description: A listing for the service has been created
+   400:
+    description: Either the service status or service type supplied is incorrect
+   403:
+    description: Registering of services is not permitted with the current credentials
+ /{serviceName}:
+  get:
+   description: Retrieve the information of a specific service
+   responses:
+    200:
+     description: Details for the specified service are returned
+    404:
+     description: The service id provided does not correspond to an existing service
+  put:
+   description: Update the information of a specific service
+   responses:
+    204:
+     description: The service information has been updated
+    403:
+     description: Updating the specified service is not permitted with the current credentials
+    404:
+     description: The service id provided does not correspond to an existing service
+  delete:
+   description: Remove the specified service from the directory
+   responses:
+    204:
+     description: The specified service has been removed from the directory listing
+    403:
+     description: Removing the specified service is not permitted with the current credentials
+    404:
+     description: The service id provided does not correspond to an existing service

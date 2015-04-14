@@ -1,0 +1,285 @@
+<html>
+	<head>
+		<title><?php echo $RAML->title; ?>: <?php echo $RAML->getCurrentPath(); ?></title>
+		
+		<style type="text/css">
+		
+			*, *:before, *:after {
+			  -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+			}
+			
+			body { margin: 0; }
+			
+			body, table {
+				margin: 0;
+				font-family: arial;
+				font-size: 12px;
+			}
+			
+			a { 
+				text-decoration: none;
+			}
+			
+			h3 {
+				margin-top: 40px;
+			}
+			
+			header {
+				padding: 10px 20px;
+				background: #333;
+				color: #fff;
+				border-bottom: 2px solid #999;
+			}
+			
+			header a {
+				color: #fff;
+			}
+			
+			#container { position: relative; }
+			
+			article {
+				margin: 0 20px;
+			}
+			
+			nav {
+				border-left: 1px dashed #999;
+				padding: 0 15px;
+			}
+			
+			footer {
+				clear: both;
+				margin-top: 30px;
+				padding: 10px 20px;
+				text-align: center;
+				font-size: 10px;
+				background: #333;
+				color: #999;
+				border-top: 2px solid #999;
+			}
+			
+			footer a {
+				color: #ccc;
+			}
+			
+			table {
+				width: 96%;
+				border: 1px solid #333;
+			}
+			
+			table thead tr td {
+				background: #666;
+				color: #fff;
+				font-weight: bold;
+			}
+			
+			table tr {
+				padding: 15px 0;
+			}
+			
+			tr:nth-child(odd) {
+			    background-color: #f3f3f3;
+			}
+			
+			table td {
+				vertical-align: top;
+				padding: 5px;
+			}
+			
+			.badge {
+				display: inline-block;
+				font-size: 14px;
+				padding: 5px;
+				margin-right: 20px;
+		        border-radius: 0;
+		        text-transform: uppercase;
+		        width: 70px;
+		        font-weight: normal;
+		        color: #f3f3f6;
+		        line-height: normal;
+		        background-color: #999;
+		        text-align: center;
+		    }
+		    .block.collapsed .badge {
+		        visibility: visible;
+		    }
+		    .badge_get {
+		        background-color: #63a8e2;
+		    }
+		    .badge_post {
+		        background-color: #6cbd7d;
+		    }
+		    .badge_put {
+		        background-color: #22bac4;
+		    }
+		    .badge_patch {
+		    	background-color: #02b0e2;
+		    }
+		    .badge_delete {
+		        background-color: #d26460;
+		    }
+		    .badge_connect {
+		    	background-color: #e48f0a;
+		    }
+		    .badge_trace {
+		    	background-color: #98b805;
+		    }
+		    
+		    .text_get {
+		        color: #0b88b9;
+		    }
+		    .text_post {
+		        color: #6cbd7d;
+		    }
+		    .text_put {
+		        color: #22bac4;
+		    }
+		    .text_patch {
+		    	color: #02b0e2;
+		    }
+		    .text_delete {
+		        color: #d26460;
+		    }
+		    .text_connect {
+		    	color: #e48f0a;
+		    }
+		    .text_trace {
+		    	color: #98b805;
+		    }
+		    
+		    .online {
+		    	color: #090;
+		    }
+		    
+		    .offline {
+		    	color: #F00;
+		    }
+		    
+		    
+		    ul.verbs, ul.resources, nav ul {
+		    	margin: 0;
+		    	padding: 0;
+		    	list-style-type: none;
+		    }
+		    
+		    ul.verbs li, ul.resources li {
+		    	padding: 0 0 10px 0;
+		    	margin: 0 0 10px 0;
+		    	border-bottom: 1px dotted #ccc;
+		    }
+		    
+		    ul.resources li a {
+		    	font-weight: bold;
+		    	font-size: 16px;
+		    	color: #666;
+		    }
+		    
+		    ul.resources li a:hover {
+		    	color: #63a8e2;
+		    }
+		    
+		    nav ul li a {
+		    	display: block;
+		    	padding: 0 0 10px 0;
+		    	margin: 0 0 10px 0;
+		    	border-bottom: 1px dotted #ccc;
+		    	font-size: 14px;
+		    	color: #666;
+		    }
+		    
+		    nav ul li a:hover {
+		    	font-weight: bold;
+		    }
+		    
+		    div.apiresponse {
+		    	width: 96%;
+		    	max-height: 300px;
+		    	background: #f3f3f3;
+		    	border: 1px solid #333;
+		    	padding: 10px;
+		    	overflow: scroll;
+		    	font-family: monospace;
+		    	font-size: 10px;
+		    }
+			
+			@media screen and (min-width: 60em ) {
+			  nav { float: right; top: 0; right: 0; width: 30em; }
+			  article { margin-right: 30.75em; }
+			
+				   
+			}
+		
+		</style>
+		
+	</head>
+
+	<body>
+		<header>
+			<h1><a href="<?php echo $_SERVER['PHP_SELF']; ?>"><?php echo $RAML->get('title'); ?></a></h1>
+			<p>version <?php echo $RAML->get('version'); ?> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <?php echo $RAML->get('baseUri'); ?></p>
+		</header>
+		
+		
+		<div id="container">
+			
+			<nav>
+				<?php 
+				include('_menu.phtml');
+				?>
+			</nav>
+		
+			<article>		
+				<?php if ($RAML->getCurrentPath() != '/'): ?>
+					<h2><?php echo $RAML->getCurrentPath(); ?></h2>
+				<?php elseif (!$RAML->path()->description): ?>
+					<!-- CSS HACK --><img width="1" height="1" />
+				<?php endif; ?>
+				
+				
+				<?php $validPath = $RAML->isPathValid($RAML->getCurrentPath()); ?>
+				
+				
+				<?php if($validPath && !$RAML->getCurrentAction() && $RAML->path()->description):
+					echo $RAML->path()->description; 
+				endif; ?>
+				
+				
+				<?php
+				if (!$validPath):
+					include('_404.phtml');
+				endif;
+				?>
+				
+				
+				<?php 
+				if ($validPath && $RAML->path()->getVerbs() && !$RAML->getCurrentAction()):
+					include('_verbs.phtml');
+				endif;
+				?>
+				
+				
+				
+				<?php 
+				if ($validPath && $RAML->getChildPaths($RAML->getCurrentPath()) && !$RAML->getCurrentAction()):
+					include('_resources.phtml');
+				endif;
+				?>
+				
+				
+				<?php
+				if ($RAML->getCurrentAction()):
+					include('_action.phtml');
+				endif;
+				?>
+				
+			
+			</article>
+
+			<div style="clear: both;"></div>
+
+		</div>
+
+		<footer>
+			powered by <a href="http://www.raml.org">RAML</a> &nbsp; &nbsp; | &nbsp; &nbsp; script by <a href="http://www.mikestowe.com/2014/05/raml-2-html.php" target="_blank">MikeStowe.com</a>
+		</footer>
+	</body>
+</html>

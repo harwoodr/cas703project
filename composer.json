@@ -1,0 +1,7 @@
+{
+    "require": {
+        "alecsammon/php-raml-parser": "1.0.0.*@dev",
+        "slim/slim": "2.6.2",
+        "adodb/adodb-php": "5.19"
+    }
+}

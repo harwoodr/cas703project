@@ -1,0 +1,17 @@
+Implementing the CAS 703 web services SOA project.
+
+Requirements:
+
+Apache web server 2.2.X or higher
+PHP 5.3.X or higher
+MySQL 5.5.X or higher
+
+1. There are .htaccess files in the following directories:  the root, auth, game, player, service and tictactoe.  The "RewriteBase" in each of these files needs to reflect the effective URL of your installation.  Additonally, mod_rewrite needs to be enabled on your apache server.
+
+2. config.php needs to be edited to reflect your database credentials and the installation root ($serverurl) for the application.
+
+3. index.php also needs to have $baseurl edited to reflect your server install.
+
+4. SQL for each of the required databases can be found in /doc/database and they need to be imported into your mysql server for each of the services.  If you need to alter the naming, ensure that you edit the $appdb parameters of each service's index.php to reflect the changes.
+
+
